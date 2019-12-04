@@ -33,23 +33,7 @@
 
 /* Private typedef -----------------------------------------------------------*/
 /* USER CODE BEGIN PTD */
-void StartShan(void const *argument){
-	while(1){
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_RESET);
-		osDelay(600);
-		HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_4);
-		osDelay(150);
-		HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_4);
-		osDelay(150);
-		HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_4);
-		osDelay(150);
-		HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_4);
-		osDelay(150);
-		HAL_GPIO_TogglePin(GPIOB,GPIO_PIN_4);
-		HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET);
-		osDelay(1500);
-	}
-}
+
 /* USER CODE END PTD */
 
 /* Private define ------------------------------------------------------------*/
@@ -127,7 +111,7 @@ char acDevInfo[128] = {0}, acHexBuf[256] = {0}, acAtBuf[512] = {0}, acUserCmd[64
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  float fTemp = 34.2, fHumi = 0.0;
+  float fTemp = 34.2, fHumi = 0.0;  //温度和湿度
   int iUserCase = 0, iRet = -1;
   char netFlag = 0, cmdLen = 0;
   uint32_t atLen = 0, dLen = 0, timeout = 1000, upFreq = 0;
@@ -256,8 +240,53 @@ int main(void)
         * 解析用户命令执行对应操作 
         * TO-DO
         */
-        HAL_GPIO_TogglePin(GPIOB, GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7);
-        HAL_Delay(1000);
+       char tens = acUserCmd[6];
+       char unit = acUserCmd[7];
+       int cmd_num = (tens - '0') * 16 + (unit - '0');
+       int flag = 0;
+       switch (cmd_num)
+       {
+       case 0: 
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, 1);
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, 1);
+            break;
+        case 1:
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, 0);
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, 1);
+            break;
+        case 2:
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, 1);
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, 0);
+            break;
+        case 3:
+            flag = 1;
+            while(flag == 1){
+                HAL_Delay(1000);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, 1);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, 1);
+                HAL_Delay(1000);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, 0);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, 1);
+                HAL_Delay(1000);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, 1);
+                HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, 0);
+            }
+        case 4:
+            flag = 0;
+        default:
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, 0);
+            HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, 0);
+            break;
+
+
+       }
         
         /* 向平台发送命令响应
         * AT+NMGS=5,02000A000A
