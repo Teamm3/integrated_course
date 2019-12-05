@@ -139,17 +139,11 @@ void ctrl_light(int light_number, int ctrl_number)
   {
   case BLUE_LIGHT:
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, 1);
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, 1);
     break;
   case RED_LIGHT:
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, 0);
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, 1);
     break;
   case GREEN_LIGHT:
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 1);
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, 1);
     HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, 0);
     break;
   }
@@ -325,8 +319,19 @@ int main(void)
           break;
         case 4:
           ctrl_light(BLUE_LIGHT, LIGHT_ON);
+          break;
         case 5:
           ctrl_light(BLUE_LIGHT, LIGHT_OFF);
+          break;
+        case 6:
+          ctrl_light(RED_LIGHT,LIGHT_OFF);
+          ctrl_light(GREEN_LIGHT,LIGHT_OFF);
+          ctrl_light(BLUE_LIGHT,LIGHT_OFF);
+          break;
+        case 7:
+          ctrl_light(RED_LIGHT,LIGHT_ON);
+          ctrl_light(BLUE_LIGHT,LIGHT_ON);
+          ctrl_light(GREEN_LIGHT,LIGHT_ON);
         }
 
         /* 向平台发送命令响应
