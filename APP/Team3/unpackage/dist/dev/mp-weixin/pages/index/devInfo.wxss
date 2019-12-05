@@ -1,0 +1,40 @@
+
+.uni-list-cell {
+	-webkit-box-pack: start;
+	-webkit-justify-content: flex-start;
+	    -ms-flex-pack: start;
+	        justify-content: flex-start
+}
+.uni-list .label-3 {
+	padding: 0;
+}
+.label-2-text {
+	-webkit-box-flex: 1;
+	-webkit-flex: 1;
+	    -ms-flex: 1;
+	        flex: 1;
+}
+
+
+.scroll-Y {
+	height: 800rpx;
+}
+.scroll-view_H {
+	white-space: nowrap;
+	width: 100%;
+}
+.scroll-view-item {
+	height: 150rpx;
+	line-height: 300rpx;
+	text-align: center;
+	font-size: 36rpx;
+}
+.scroll-view-item_H {
+	display: inline-block;
+	width: 100%;
+	height: 300rpx;
+	line-height: 300rpx;
+	text-align: center;
+	font-size: 36rpx;
+}
+
