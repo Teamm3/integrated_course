@@ -8740,10 +8740,41 @@ __webpack_require__.r(__webpack_exports__);
       red_src: 'off',
       green_src: 'off',
       blue_src: 'off',
-      cmd_str: '123321' };
+      cmd_str: '123321',
+      cmd_code_input: 0 };
 
   },
   methods: {
+    send_code: function send_code() {
+      var cmd_code = this.cmd_code_input;
+      var cmd_para = {
+        cmdstring: this.cmd_str,
+        cmdlen: this.cmd_str.length,
+        cmdcode: cmd_code };
+
+      var cmdstr = JSON.stringify(cmd_para);
+      uni.request({
+        url: this.globalVal.default_url.devCmd,
+        method: 'POST',
+        data: {
+          deviceId: this.globalVal.devId,
+          cmdInfo: cmdstr },
+
+        success: function success(res) {
+          uni.showToast({
+            title: "命令已发送!",
+            icon: "none",
+            duration: 2000 });
+
+        },
+        fail: function fail() {
+          uni.showToast({
+            title: "命令发送失败!",
+            duration: 2000 });
+
+        } });
+
+    },
     test: function test() {
       console.info('this is a info');
       console.log('this is a log');
@@ -8799,22 +8830,106 @@ __webpack_require__.r(__webpack_exports__);
 
       console.log(this.red_src);
     },
-    change_green: function change_green(e) {
+    change_green: function change_green(e) {var _this2 = this;
       console.log(this.green_src);
+      var cmd_code = 2;
       if ('off' == this.green_src) {
-        this.green_src = 'green';
-      } else {
-        this.green_src = 'off';
+        cmd_code = 3;
       }
+      var cmd_para = {
+        cmdstring: this.cmd_str,
+        cmdlen: this.cmd_str.length,
+        cmdcode: cmd_code };
+
+      var cmdstr = JSON.stringify(cmd_para);
+      uni.request({
+        url: this.globalVal.default_url.devCmd,
+        method: 'POST',
+        data: {
+          deviceId: this.globalVal.devId,
+          cmdInfo: cmdstr },
+
+        success: function success(res) {
+          var title = "";
+          if (cmd_code == 3) {
+            title = "绿灯已点亮！";
+            _this2.green_src = 'green';
+          } else {
+            title = "绿灯已熄灭！";
+            _this2.green_src = 'off';
+          }
+          uni.showToast({
+            title: title,
+            icon: "none",
+            duration: 2000 });
+
+        },
+        fail: function fail() {
+          var title = "";
+          if (cmd_code == 3) {
+            title = "绿灯点亮失败！";
+          } else {
+            title = "绿灯熄灭失败！";
+          }
+          uni.showToast({
+            title: title,
+            duration: 2000 });
+
+
+        },
+        complete: function complete() {} });
+
       console.log(this.green_src);
     },
-    change_blue: function change_blue(e) {
+    change_blue: function change_blue(e) {var _this3 = this;
       console.log(this.blue_src);
+      var cmd_code = 4;
       if ('off' == this.blue_src) {
-        this.blue_src = 'blue';
-      } else {
-        this.blue_src = 'off';
+        cmd_code = 5;
       }
+      var cmd_para = {
+        cmdstring: this.cmd_str,
+        cmdlen: this.cmd_str.length,
+        cmdcode: cmd_code };
+
+      var cmdstr = JSON.stringify(cmd_para);
+      uni.request({
+        url: this.globalVal.default_url.devCmd,
+        method: 'POST',
+        data: {
+          deviceId: this.globalVal.devId,
+          cmdInfo: cmdstr },
+
+        success: function success(res) {
+          var title = "";
+          if (cmd_code == 5) {
+            title = "蓝灯已点亮！";
+            _this3.blue_src = 'blue';
+          } else {
+            title = "蓝灯已熄灭！";
+            _this3.blue_src = 'off';
+          }
+          uni.showToast({
+            title: title,
+            icon: "none",
+            duration: 2000 });
+
+        },
+        fail: function fail() {
+          var title = "";
+          if (cmd_code == 5) {
+            title = "蓝灯点亮失败！";
+          } else {
+            title = "蓝灯熄灭失败！";
+          }
+          uni.showToast({
+            title: title,
+            duration: 2000 });
+
+
+        },
+        complete: function complete() {} });
+
       console.log(this.blue_src);
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
