@@ -357,6 +357,14 @@ int main(void)
           ctrl_light(RED_LIGHT, LIGHT_ON);
           ctrl_light(BLUE_LIGHT, LIGHT_ON);
           ctrl_light(GREEN_LIGHT, LIGHT_ON);
+					break;
+				case 8:
+					while(1){
+					Beep_Switch(1);
+					HAL_Delay(1000);
+					Beep_Switch(0);
+					HAL_Delay(1000);
+					}
         }
 
         /* ?????????
