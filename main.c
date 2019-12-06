@@ -23,6 +23,7 @@
 #include "adc.h"
 #include "dma.h"
 #include "i2c.h"
+#include "tim.h"
 #include "usart.h"
 #include "gpio.h"
 
@@ -140,13 +141,13 @@ void ctrl_light(int light_number, int ctrl_number)
   switch (light_number)
   {
   case BLUE_LIGHT:
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, 0);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_5, ctrl_number);
     break;
   case RED_LIGHT:
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, 0);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_6, ctrl_number);
     break;
   case GREEN_LIGHT:
-    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, 0);
+    HAL_GPIO_WritePin(GPIOB, GPIO_PIN_7, ctrl_number);
     break;
   }
 }
@@ -161,15 +162,12 @@ char acDevInfo[128] = {0}, acHexBuf[256] = {0}, acAtBuf[512] = {0}, acUserCmd[64
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-  float fTemp = 34.2, fHumi = 0.0; //温度和湿度
+  static uint16_t ausAdcDataBuf[2] = {0};
+  float fTemp = 34.2, fHumi = 0.0;
   int iUserCase = 0, iRet = -1;
   char netFlag = 0, cmdLen = 0;
-  uint32_t atLen = 0, dLen = 0, timeout = 1000, upFreq = 0;
-  /* USER CODE END 1 */
-
-  /* USER CODE BEGIN 1 */
-  static uint16_t ausAdcDataBuf[2] = {0};
   uint16_t val = 0;
+  uint32_t atLen = 0, dLen = 0, timeout = 1000, upFreq = 0;
   float fVolts = 0.0, fAmps = 0.0, fMicroamps = 0.0, fLux = 0.0;
   /* USER CODE END 1 */
 
@@ -191,11 +189,12 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
-  MX_DMA_Init();
-  MX_ADC1_Init();
   MX_USART1_UART_Init();
   MX_USART3_UART_Init();
   MX_I2C2_Init();
+  MX_TIM2_Init();
+  MX_DMA_Init();
+  MX_ADC1_Init();
   /* USER CODE BEGIN 2 */
   UART_Enable_Receive_IT();
 
@@ -246,141 +245,141 @@ int main(void)
     case 7:
       if (0 == upFreq && 1 == netFlag)
       {
-        KE1_I2C_SHT31(&fTemp, &fHumi);                           // 采集温湿度或者其他信息上传到电信物联网平台
-        HAL_ADC_Start_DMA(&hadc1, (uint32_t *)ausAdcDataBuf, 2); // 开始DMA AD采样
-
-        // 光照强度AD数据转换（参考）
+        HAL_ADC_Start_DMA(&hadc1, (uint32_t *)ausAdcDataBuf, 2);
+        printf("\n\n\n\n\n\n*************************************************************************************\n");
+        printf("%d    %d\n", ausAdcDataBuf[0], ausAdcDataBuf[1]);
+        printf("*************************************************************************************\n\n\n\n\n\n\n\n");
+        //
         fVolts = ((3.3f * ausAdcDataBuf[0]) / 4096.0f);
         fAmps = fVolts / 10000.0f;
         fMicroamps = fAmps * 1000000;
         fLux = fMicroamps * 2.0f;
-        printf("Light:PA4_ADC:%d - %.2fLux\n", ausAdcDataBuf[0], fLux);
+        // printf("Light:PA4_ADC:%d - %.2fLux\n", ausAdcDataBuf[0], fLux);
 
-        // 噪音AD数据转换（参考）
+        //
         val = ausAdcDataBuf[1];
         val = (((3.3f * val) / 4096.0f) * 2 * 1.5f) * 1000;
-        printf("Sound:PA6_ADC:%d - %d\n", ausAdcDataBuf[1], val);
+        // printf("Sound:PA6_ADC:%d - %d\n", ausAdcDataBuf[1], val);
 
-        HAL_ADC_Stop(&hadc1); // 结束DMA AD采样
+        HAL_ADC_Stop(&hadc1);
 
+        KE1_I2C_SHT31(&fTemp, &fHumi);
+
+        memset(acDevInfo, 0, sizeof(acDevInfo));
+        memset(acAtBuf, 0, sizeof(acAtBuf));
+
+        dLen = snprintf(acDevInfo, sizeof(acDevInfo), "{\"T\":\"%0.2f\",\"H\":\"%0.2f\",\"L\":\"%0.2f\",\"S\":\"%0.2f\"}", fTemp, fHumi, fLux, val); // 打包用户数据
+        printf("%s\r\n", acDevInfo);
+        ascii2hex(acDevInfo, acHexBuf);
+        snprintf(acAtBuf, sizeof(acAtBuf), "AT+NMGS=%d,00%04X%s\r\n", (dLen + 3), dLen, acHexBuf); // æ‰“åŒ…COAPæ•°æ®åŒ…ATå‘½ä»¤
+        printf("%s\r\n", acAtBuf);
+        KE1_Send_AT(acAtBuf);
+        upFreq = 6;
         HAL_Delay(1000);
       }
-      /* USER CODE END 3 */
-
-      memset(acDevInfo, 0, sizeof(acDevInfo));
-      memset(acAtBuf, 0, sizeof(acAtBuf));
-
-      dLen = snprintf(acDevInfo, sizeof(acDevInfo), "{\"T\":\"%0.2f\",\"H\":\"%0.2f\"}", fTemp, fHumi); // 打包用户数据
-      printf("%s\r\n", acDevInfo);
-      ascii2hex(acDevInfo, acHexBuf);
-      snprintf(acAtBuf, sizeof(acAtBuf), "AT+NMGS=%d,00%04X%s\r\n", (dLen + 3), dLen, acHexBuf); // 打包COAP数据包AT命令
-      printf("%s\r\n", acAtBuf);
-      KE1_Send_AT(acAtBuf);
-      upFreq = (60 * 60);
-    }
-    break;
+      break;
 #endif
-  }
-
-  atLen = sizeof(acAtBuf);
-  iRet = KE1_Recv_AT(acAtBuf, &atLen, timeout);
-  //printf("\r\nRAT:%d\r\n",iRet);
-  if (0 == iRet)
-  { //AT命令响应超时
-  }
-  else if (1 == iRet)
-  { //AT命令接收到OK响应
-    if (7 == iUserCase)
-    {
-    }
-    else
-    {
-      iUserCase++;
     }
 
-    HAL_Delay(1000);
-  }
-  else if (2 == iRet)
-  { //AT命令接收到ERROR响应
-    printf("AT error !\r\n");
-    if (7 == iUserCase)
-    {
-      iUserCase = 0; // 重新初始化模组
+    atLen = sizeof(acAtBuf);
+    iRet = KE1_Recv_AT(acAtBuf, &atLen, timeout);
+    //printf("\r\nRAT:%d\r\n",iRet);
+    if (0 == iRet)
+    { //AT命令响应超时
     }
-    HAL_Delay(1000);
-  }
-  else if (3 == iRet)
-  { //接收到网络已注册提示
-    printf("Net ready !\r\n");
-    netFlag = 1;
-    HAL_Delay(5000);
-  }
-  else if (4 == iRet)
-  { //AT命令接收到电信物联网平台下发数据
-    printf("%s", acAtBuf);
-    memset(acUserCmd, 0, sizeof(acUserCmd));
-    cmdLen = KE1_Parse_NNMI(acAtBuf, acUserCmd);
-    printf("user data[%d]:%s\r\n", cmdLen, acUserCmd);
-    if (strstr(acUserCmd, "AAAA0000"))
-    {
-      printf("device info upload successfully\r\n");
+    else if (1 == iRet)
+    { //AT命令接收到OK响应
+      if (7 == iUserCase)
+      {
+      }
+      else
+      {
+        iUserCase++;
+      }
+
+      HAL_Delay(1000);
     }
-    else
-    {
-      /* 
+    else if (2 == iRet)
+    { //AT命令接收到ERROR响应
+      printf("AT error !\r\n");
+      if (7 == iUserCase)
+      {
+        iUserCase = 0; // 重新初始化模组
+      }
+      HAL_Delay(1000);
+    }
+    else if (3 == iRet)
+    { //接收到网络已注册提示
+      printf("Net ready !\r\n");
+      netFlag = 1;
+      HAL_Delay(5000);
+    }
+    else if (4 == iRet)
+    { //AT命令接收到电信物联网平台下发数据
+      printf("%s", acAtBuf);
+      memset(acUserCmd, 0, sizeof(acUserCmd));
+      cmdLen = KE1_Parse_NNMI(acAtBuf, acUserCmd);
+      printf("user data[%d]:%s\r\n", cmdLen, acUserCmd);
+      if (strstr(acUserCmd, "AAAA0000"))
+      {
+        printf("device info upload successfully\r\n");
+      }
+      else
+      {
+        /* 
         * 解析用户命令执行对应操作 
         * TO-DO
         */
-      int cmd_num = hex2dec(acUserCmd[6], acUserCmd[7]);
-      switch (cmd_num)
-      {
-      case 0:
-        ctrl_light(RED_LIGHT, LIGHT_ON);
-        break;
-      case 1:
-        ctrl_light(RED_LIGHT, LIGHT_OFF);
-        break;
-      case 2:
-        ctrl_light(GREEN_LIGHT, LIGHT_ON);
-        break;
-      case 3:
-        ctrl_light(GREEN_LIGHT, LIGHT_OFF);
-        break;
-      case 4:
-        ctrl_light(BLUE_LIGHT, LIGHT_ON);
-        break;
-      case 5:
-        ctrl_light(BLUE_LIGHT, LIGHT_OFF);
-        break;
-      case 6:
-        ctrl_light(RED_LIGHT, LIGHT_OFF);
-        ctrl_light(GREEN_LIGHT, LIGHT_OFF);
-        ctrl_light(BLUE_LIGHT, LIGHT_OFF);
-        break;
-      case 7:
-        ctrl_light(RED_LIGHT, LIGHT_ON);
-        ctrl_light(BLUE_LIGHT, LIGHT_ON);
-        ctrl_light(GREEN_LIGHT, LIGHT_ON);
-      }
+        int cmd_num = hex2dec(acUserCmd[6], acUserCmd[7]);
+        switch (cmd_num)
+        {
+        case 0:
+          ctrl_light(RED_LIGHT, LIGHT_ON);
+          break;
+        case 1:
+          ctrl_light(RED_LIGHT, LIGHT_OFF);
+          break;
+        case 2:
+          ctrl_light(GREEN_LIGHT, LIGHT_ON);
+          break;
+        case 3:
+          ctrl_light(GREEN_LIGHT, LIGHT_OFF);
+          break;
+        case 4:
+          ctrl_light(BLUE_LIGHT, LIGHT_ON);
+          break;
+        case 5:
+          ctrl_light(BLUE_LIGHT, LIGHT_OFF);
+          break;
+        case 6:
+          ctrl_light(RED_LIGHT, LIGHT_OFF);
+          ctrl_light(GREEN_LIGHT, LIGHT_OFF);
+          ctrl_light(BLUE_LIGHT, LIGHT_OFF);
+          break;
+        case 7:
+          ctrl_light(RED_LIGHT, LIGHT_ON);
+          ctrl_light(BLUE_LIGHT, LIGHT_ON);
+          ctrl_light(GREEN_LIGHT, LIGHT_ON);
+        }
 
-      /* 向平台发送命令响应
+        /* 向平台发送命令响应
         * AT+NMGS=5,02000A000A
         */
-      acUserCmd[1] = '2';
-      acUserCmd[6] = '0';
-      acUserCmd[7] = '0';
-      acUserCmd[8] = '0';
-      acUserCmd[9] = '0';
-      acUserCmd[10] = 0;
-      snprintf(acAtBuf, sizeof(acAtBuf), "AT+NMGS=%d,%s\r\n", 5, acUserCmd); // 打包COAP数据包AT命令
-      KE1_Send_AT(acAtBuf);
+        acUserCmd[1] = '2';
+        acUserCmd[6] = '0';
+        acUserCmd[7] = '0';
+        acUserCmd[8] = '0';
+        acUserCmd[9] = '0';
+        acUserCmd[10] = 0;
+        snprintf(acAtBuf, sizeof(acAtBuf), "AT+NMGS=%d,%s\r\n", 5, acUserCmd); // 打包COAP数据包AT命令
+        KE1_Send_AT(acAtBuf);
+      }
     }
-  }
 
-  if (0 != upFreq)
-    upFreq--;
-}
-/* USER CODE END 3 */
+    if (0 != upFreq)
+      upFreq--;
+  }
+  /* USER CODE END 3 */
 }
 
 /**
@@ -424,6 +423,14 @@ void SystemClock_Config(void)
   PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
   PeriphClkInit.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
   PeriphClkInit.I2c2ClockSelection = RCC_I2C2CLKSOURCE_PCLK1;
+  PeriphClkInit.AdcClockSelection = RCC_ADCCLKSOURCE_PLLSAI1;
+  PeriphClkInit.PLLSAI1.PLLSAI1Source = RCC_PLLSOURCE_HSE;
+  PeriphClkInit.PLLSAI1.PLLSAI1M = 1;
+  PeriphClkInit.PLLSAI1.PLLSAI1N = 8;
+  PeriphClkInit.PLLSAI1.PLLSAI1P = RCC_PLLP_DIV7;
+  PeriphClkInit.PLLSAI1.PLLSAI1Q = RCC_PLLQ_DIV2;
+  PeriphClkInit.PLLSAI1.PLLSAI1R = RCC_PLLR_DIV2;
+  PeriphClkInit.PLLSAI1.PLLSAI1ClockOut = RCC_PLLSAI1_ADC1CLK;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();
