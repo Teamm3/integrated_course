@@ -734,7 +734,7 @@ function initData(vueOptions, context) {
     try {
       data = data.call(context); // 支持 Vue.prototype 上挂的数据
     } catch (e) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.warn('根据 Vue 的 data 函数初始化小程序 data 失败，请尽量确保 data 函数中不访问 vm 对象，否则可能影响首次数据渲染速度。', data);
       }
     }
@@ -6990,7 +6990,7 @@ function type(obj) {
 
 function flushCallbacks$1(vm) {
     if (vm.__next_tick_callbacks && vm.__next_tick_callbacks.length) {
-        if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+        if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:flushCallbacks[' + vm.__next_tick_callbacks.length + ']');
@@ -7011,14 +7011,14 @@ function nextTick$1(vm, cb) {
     //1.nextTick 之前 已 setData 且 setData 还未回调完成
     //2.nextTick 之前存在 render watcher
     if (!vm.__next_tick_pending && !hasRenderWatcher(vm)) {
-        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + vm._uid +
                 ']:nextVueTick');
         }
         return nextTick(cb, vm)
     }else{
-        if(Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG){
+        if(Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG){
             var mpInstance$1 = vm.$scope;
             console.log('[' + (+new Date) + '][' + (mpInstance$1.is || mpInstance$1.route) + '][' + vm._uid +
                 ']:nextMPTick');
@@ -7094,7 +7094,7 @@ var patch = function(oldVnode, vnode) {
     });
     var diffData = diff(data, mpData);
     if (Object.keys(diffData).length) {
-      if (Object({"VUE_APP_PLATFORM":"mp-weixin","NODE_ENV":"development","BASE_URL":"/"}).VUE_APP_DEBUG) {
+      if (Object({"NODE_ENV":"development","VUE_APP_PLATFORM":"mp-weixin","BASE_URL":"/"}).VUE_APP_DEBUG) {
         console.log('[' + (+new Date) + '][' + (mpInstance.is || mpInstance.route) + '][' + this._uid +
           ']差量更新',
           JSON.stringify(diffData));
@@ -8415,7 +8415,7 @@ module.exports = {"_from":"@dcloudio/uni-stat@next","_id":"@dcloudio/uni-stat@2.
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/devInfo": { "navigationBarTitleText": "设备信息", "enablePullDownRefresh": true, "backgroundTextStyle": "dark" }, "pages/index/devCmd": { "navigationBarTitleText": "设备命令" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/devInfo": { "navigationBarTitleText": "设备信息", "enablePullDownRefresh": true, "backgroundTextStyle": "dark", "usingComponents": {} }, "pages/index/devCmd": { "navigationBarTitleText": "设备命令", "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
 
 /***/ }),
 /* 8 */
@@ -8745,8 +8745,8 @@ __webpack_require__.r(__webpack_exports__);
 
   },
   methods: {
-    send_code: function send_code() {
-      var cmd_code = this.cmd_code_input;
+    send_requests: function send_requests(cmd_code) {
+      var result = {};
       var cmd_para = {
         cmdstring: this.cmd_str,
         cmdlen: this.cmd_str.length,
@@ -8761,176 +8761,89 @@ __webpack_require__.r(__webpack_exports__);
           cmdInfo: cmdstr },
 
         success: function success(res) {
-          uni.showToast({
-            title: "命令已发送!",
-            icon: "none",
-            duration: 2000 });
+          result = {
+            code: 200,
+            response: res };
 
         },
         fail: function fail() {
-          uni.showToast({
-            title: "命令发送失败!",
-            duration: 2000 });
+          result = {
+            code: 400,
+            response: null };
 
         } });
 
+      return result;
     },
-    test: function test() {
-      console.info('this is a info');
-      console.log('this is a log');
-    },
-    change_red: function change_red(e) {var _this = this;
-      console.log(this.red_src);
-      var cmd_code = 0;
-      if ('off' == this.red_src) {
-        cmd_code = 1;
+    send_code: function send_code() {
+      var res = this.send_requests(this.cmd_code_input);
+      if (200 == res.code) {
+        uni.showToast({
+          title: "命令发送成功！",
+          icon: "none",
+          duration: 2000 });
+
+      } else {
+        uni.showToast({
+          title: "命令发送失败！",
+          icon: "none",
+          duration: 2000 });
+
       }
-      var cmd_para = {
-        cmdstring: this.cmd_str,
-        cmdlen: this.cmd_str.length,
-        cmdcode: cmd_code };
-
-      var cmdstr = JSON.stringify(cmd_para);
-      uni.request({
-        url: this.globalVal.default_url.devCmd,
-        method: 'POST',
-        data: {
-          deviceId: this.globalVal.devId,
-          cmdInfo: cmdstr },
-
-        success: function success(res) {
-          var title = "";
-          if (cmd_code == 1) {
-            title = "红灯已点亮！";
-            _this.red_src = 'red';
-          } else {
-            title = "红灯已熄灭！";
-            _this.red_src = 'off';
-          }
-          uni.showToast({
-            title: title,
-            icon: "none",
-            duration: 2000 });
-
-        },
-        fail: function fail() {
-          var title = "";
-          if (cmd_code == 1) {
-            title = "红灯点亮失败！";
-          } else {
-            title = "红灯熄灭失败！";
-          }
-          uni.showToast({
-            title: title,
-            duration: 2000 });
-
-
-        },
-        complete: function complete() {} });
-
-      console.log(this.red_src);
     },
-    change_green: function change_green(e) {var _this2 = this;
-      console.log(this.green_src);
-      var cmd_code = 2;
-      if ('off' == this.green_src) {
-        cmd_code = 3;
+    change_red: function change_red() {
+      var cmd_code = "off" == this.red_src ? 0 : 1;
+      var res = this.send_requests(cmd_code);
+      if (200 == res.code) {
+        uni.showToast({
+          title: "点亮红灯成功！",
+          icon: "none",
+          duration: 3000 });
+
+        this.red_src = "red";
+      } else {
+        uni.showToast({
+          title: "点亮红灯失败！",
+          icon: "none",
+          duration: 3000 });
+
       }
-      var cmd_para = {
-        cmdstring: this.cmd_str,
-        cmdlen: this.cmd_str.length,
-        cmdcode: cmd_code };
-
-      var cmdstr = JSON.stringify(cmd_para);
-      uni.request({
-        url: this.globalVal.default_url.devCmd,
-        method: 'POST',
-        data: {
-          deviceId: this.globalVal.devId,
-          cmdInfo: cmdstr },
-
-        success: function success(res) {
-          var title = "";
-          if (cmd_code == 3) {
-            title = "绿灯已点亮！";
-            _this2.green_src = 'green';
-          } else {
-            title = "绿灯已熄灭！";
-            _this2.green_src = 'off';
-          }
-          uni.showToast({
-            title: title,
-            icon: "none",
-            duration: 2000 });
-
-        },
-        fail: function fail() {
-          var title = "";
-          if (cmd_code == 3) {
-            title = "绿灯点亮失败！";
-          } else {
-            title = "绿灯熄灭失败！";
-          }
-          uni.showToast({
-            title: title,
-            duration: 2000 });
-
-
-        },
-        complete: function complete() {} });
-
-      console.log(this.green_src);
     },
-    change_blue: function change_blue(e) {var _this3 = this;
-      console.log(this.blue_src);
-      var cmd_code = 4;
-      if ('off' == this.blue_src) {
-        cmd_code = 5;
+    change_green: function change_green() {
+      var cmd_code = "off" == this.green_src ? 2 : 3;
+      var res = this.send_requests(cmd_code);
+      if (200 == res.code) {
+        uni.showToast({
+          title: "绿灯点亮成功！",
+          icon: "none",
+          duration: 3000 });
+
+        this.green_src = "green";
+      } else {
+        uni.showToast({
+          title: "绿灯点亮失败！",
+          icon: "none",
+          duration: 3000 });
+
       }
-      var cmd_para = {
-        cmdstring: this.cmd_str,
-        cmdlen: this.cmd_str.length,
-        cmdcode: cmd_code };
+    },
+    change_blue: function change_blue() {
+      var cmd_code = "off" == this.blue_src ? 4 : 5;
+      var res = this.send_requests(cmd_code);
+      if (200 == res.code) {
+        uni.showToast({
+          title: "蓝灯点亮成功！",
+          icon: "none",
+          duration: 3000 });
 
-      var cmdstr = JSON.stringify(cmd_para);
-      uni.request({
-        url: this.globalVal.default_url.devCmd,
-        method: 'POST',
-        data: {
-          deviceId: this.globalVal.devId,
-          cmdInfo: cmdstr },
+        this.blue_src = "blue";
+      } else {
+        uni.showToast({
+          title: "蓝灯点亮失败！",
+          icon: "none",
+          duration: 3000 });
 
-        success: function success(res) {
-          var title = "";
-          if (cmd_code == 5) {
-            title = "蓝灯已点亮！";
-            _this3.blue_src = 'blue';
-          } else {
-            title = "蓝灯已熄灭！";
-            _this3.blue_src = 'off';
-          }
-          uni.showToast({
-            title: title,
-            icon: "none",
-            duration: 2000 });
-
-        },
-        fail: function fail() {
-          var title = "";
-          if (cmd_code == 5) {
-            title = "蓝灯点亮失败！";
-          } else {
-            title = "蓝灯熄灭失败！";
-          }
-          uni.showToast({
-            title: title,
-            duration: 2000 });
-
-
-        },
-        complete: function complete() {} });
-
-      console.log(this.blue_src);
+      }
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
