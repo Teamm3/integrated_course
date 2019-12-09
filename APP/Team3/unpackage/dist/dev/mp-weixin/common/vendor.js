@@ -8706,6 +8706,174 @@ __webpack_require__.r(__webpack_exports__);
           duration: 3000 });
 
       }
+    },
+    beep_up: function beep_up() {
+      var cmd_code = 8;
+      var res = this.send_requests(cmd_code);
+      if (200 == res.code) {
+        uni.showToast({
+          title: "蜂鸣器警报已经打开",
+          icon: "none",
+          duration: 2000 });
+
+      } else
+      {
+        uni.showToast({
+          title: "蜂鸣器打开失败",
+          icon: "none",
+          duration: 2000 });
+
+      }
+    } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
+
+/***/ }),
+/* 28 */,
+/* 29 */,
+/* 30 */,
+/* 31 */,
+/* 32 */,
+/* 33 */
+/*!*******************************************************************************************!*\
+  !*** E:/DZQ/项目/git/integrated_course/APP/Team3/my_js/devInfo.js?vue&type=script&lang=js& ***!
+  \*******************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_12_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_devInfo_js_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../课件/课程设计/开发工具/HBuilderX/plugins/uniapp-cli/node_modules/babel-loader/lib!../../../../../../课件/课程设计/开发工具/HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--12-1!../../../../../../课件/课程设计/开发工具/HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/webpack-uni-mp-loader/lib/script.js!./devInfo.js?vue&type=script&lang=js& */ 34);
+/* harmony import */ var _HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_12_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_devInfo_js_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_12_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_devInfo_js_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_12_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_devInfo_js_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_12_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_devInfo_js_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_12_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_devInfo_js_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+/* 34 */
+/*!**********************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib!./node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--12-1!./node_modules/@dcloudio/webpack-uni-mp-loader/lib/script.js!E:/DZQ/项目/git/integrated_course/APP/Team3/my_js/devInfo.js?vue&type=script&lang=js& ***!
+  \**********************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
+  data: function data() {
+    return {
+      temperature: -45,
+      humidity: 0.00,
+      sound: 0.00,
+      light: 0.00,
+      history: [],
+      scrollTop: 0,
+      selectedItem: 1,
+      old: {
+        scrollTop: 0 } };
+
+
+  },
+  onLoad: function onLoad() {
+    console.info("执行onLoad");
+    this.getInfo();
+    this.getHistory();
+  },
+  onPullDownRefresh: function onPullDownRefresh() {
+    console.info("执行onPullDownRefresh");
+    this.getInfo();
+    this.getHistory();
+  },
+  methods: {
+    changeItem: function changeItem(number) {
+      this.selectedItem = number;
+    },
+    getInfo: function getInfo() {var _this = this;
+      uni.showToast({
+        title: "数据加载中......",
+        mask: false,
+        duration: 1000 });
+
+      uni.request({
+        url: this.globalVal.default_url.devInfo,
+        method: "POST",
+        data: {
+          deviceId: this.globalVal.devId },
+
+        success: function success(res) {
+          if (200 == res.statusCode) {
+            console.info(res);
+            var devinfo = JSON.stringify(res.data);
+            if (undefined == res.data.error_code) {
+              var userinfo = res.data.services[0].data.infostring;
+              var val = JSON.parse(userinfo);
+              _this.temperature = val.T;
+              _this.humidity = val.H;
+              _this.sound = val.S;
+              _this.light = val.L;
+            }
+          }
+        } });
+
+    },
+    checkHistory: function checkHistory(history) {
+      // console.log(history);
+      var result = [];
+      for (var index in history) {
+        var item = history[index];
+        if (undefined == item.data)
+        {
+          // console.log("踢掉了一个");
+          continue;
+        }
+        // console.log(Object.keys(item.data));
+        var info = item.data.infostring;
+        if (undefined == info)
+        continue;
+        if (null == info)
+        continue;
+        var tem = item.data.infostring.T;
+        var hum = item.data.infostring.H;
+        if (hum == 0.00)
+        continue;
+        var time_item = item.timestamp.toString();
+        var year = time_item.substr(0, 4);
+        var month = time_item.substr(4, 2);
+        var day = time_item.substr(6, 2);
+        var my_time = year + '年' + month + '月' + day + '日';
+        item.timestamp = my_time;
+        result.push(item);
+      }
+      return result;
+    },
+    getHistory: function getHistory() {var _this2 = this;
+      uni.request({
+        url: this.globalVal.default_url.devHistory,
+        method: "POST",
+        data: {
+          deviceId: this.globalVal.devId },
+
+        success: function success(res) {
+          if (200 == res.statusCode) {
+            if (undefined == res.data.error_code) {
+              _this2.history = _this2.checkHistory(res.data.deviceDataHistoryDTOs);
+            }
+          }
+        } });
+
+    },
+    upper: function upper(e) {
+      console.log(e);
+    },
+    lower: function lower(e) {
+      console.log(e);
+    },
+    scroll: function scroll(e) {
+      console.log(e);
+      this.old.scrollTop = e.detail.scrollTop;
+    },
+    goTop: function goTop(e) {
+      this.scrollTop = this.old.scrollTop;
+      this.$nextTick(function () {
+        this.scrollTop = 0;
+      });
     } } };exports.default = _default;
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 

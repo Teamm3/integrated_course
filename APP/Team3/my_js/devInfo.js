@@ -3,8 +3,11 @@
 			return {
 				temperature: -45,
 				humidity: 0.00,
+				sound: 0.00,
+				light: 0.00,
 				history: [],
 				scrollTop: 0,
+				selectedItem: 1,
 				old: {
 					scrollTop: 0
 				}
@@ -21,10 +24,14 @@
 			this.getHistory();
 		},
 		methods: {
+			changeItem(number){
+				this.selectedItem = number;
+			},
 			getInfo() {
 				uni.showToast({
 					title: "数据加载中......",
-					mask: false
+					mask: false,
+					duration:1000
 				});
 				uni.request({
 					url: this.globalVal.default_url.devInfo,
@@ -41,6 +48,8 @@
 								let val = JSON.parse(userinfo);
 								this.temperature = val.T;
 								this.humidity = val.H;
+								this.sound = val.S;
+								this.light = val.L;
 							}
 						}
 					}

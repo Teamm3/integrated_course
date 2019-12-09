@@ -26,9 +26,11 @@
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
+#include "oled.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #define RED_LIGHT 1
@@ -63,8 +65,6 @@
 /* Private function prototypes -----------------------------------------------*/
 void SystemClock_Config(void);
 /* USER CODE BEGIN PFP */
-
-/* USER CODE END PFP */
 
 int KE1_Parse_NNMI(char *pcNNMI, char *pcOut)
 {
@@ -148,9 +148,13 @@ void ctrl_light(int light_number, int ctrl_number)
   }
 }
 
-char acDevInfo[128] = {0}, acHexBuf[256] = {0}, acAtBuf[512] = {0}, acUserCmd[64] = {0};
-/* USER CODE END 0 */
+/* USER CODE END PFP */
 
+/* Private user code ---------------------------------------------------------*/
+/* USER CODE BEGIN 0 */
+
+/* USER CODE END 0 */
+char acDevInfo[128] = {0}, acHexBuf[256] = {0}, acAtBuf[512] = {0}, acUserCmd[64] = {0};
 /**
   * @brief  The application entry point.
   * @retval int
@@ -166,6 +170,9 @@ int main(void)
   int iUserCase = 0, iRet = -1;
   char netFlag = 0, cmdLen = 0;
   uint32_t atLen = 0, dLen = 0, timeout = 1000, upFreq = 0;
+
+  uint16_t usVal = 0;
+  uint8_t dataBuf[6] = {0};
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -186,12 +193,12 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
+  MX_USART1_UART_Init();
   MX_USART3_UART_Init();
   MX_I2C2_Init();
-  MX_TIM2_Init();
-  MX_DMA_Init();
   MX_ADC1_Init();
-  MX_USART1_UART_Init();
+  MX_TIM2_Init();
   /* USER CODE BEGIN 2 */
   printf("Hello ADC\r\n");
 
@@ -203,6 +210,8 @@ int main(void)
   KE1_I2C_SHT31(&fTemp, &fHumi);
 
   printf("T:%0.2f, H:%0.2f%%\r\n", fTemp, fHumi);
+  OLED_Init();
+  OLED_Clear();
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
   while (1)
@@ -268,11 +277,15 @@ int main(void)
         dLen = snprintf(acDevInfo, sizeof(acDevInfo), "{\"T\":\"%0.2f\",\"H\":\"%0.2f\",\"L\":\"%0.2f\",\"S\":\"%d\"}", fTemp, fHumi, fLux, val); // ??????
         printf("%s\r\n", acDevInfo);
         ascii2hex(acDevInfo, acHexBuf);
-        snprintf(acAtBuf, sizeof(acAtBuf), "AT+NMGS=%d,00%04X%s\r\n", (dLen + 3), dLen, acHexBuf); // æ‰“åŒ…COAPæ•°æ®åŒ…ATå‘½ä»¤
+        snprintf(acAtBuf, sizeof(acAtBuf), "AT+NMGS=%d,00%04X%s\r\n", (dLen + 3), dLen, acHexBuf); // 打包COAP数据包AT命令
         printf("%s\r\n", acAtBuf);
         KE1_Send_AT(acAtBuf);
         upFreq = 6;
-        HAL_Delay(1000);
+        OLED_Clear();
+        OLED_ShowT_H(fTemp, fHumi);
+        HAL_Delay(2000);
+        OLED_Clear();
+        OLED_ShowS_L(val, fLux);
       }
       break;
 #endif
@@ -330,35 +343,35 @@ int main(void)
         int cmd_num = hex2dec(acUserCmd[6], acUserCmd[7]);
         switch (cmd_num)
         {
-        case 0: // 点亮红灯
+        case 0: // 打开红灯
           ctrl_light(RED_LIGHT, LIGHT_ON);
           break;
         case 1: // 熄灭红灯
           ctrl_light(RED_LIGHT, LIGHT_OFF);
           break;
-        case 2: // 点亮绿灯
+        case 2: // 打开绿灯
           ctrl_light(GREEN_LIGHT, LIGHT_ON);
           break;
         case 3: // 熄灭绿灯
           ctrl_light(GREEN_LIGHT, LIGHT_OFF);
           break;
-        case 4: // 点亮蓝灯
+        case 4: // 打开蓝灯
           ctrl_light(BLUE_LIGHT, LIGHT_ON);
           break;
         case 5: // 熄灭蓝灯
           ctrl_light(BLUE_LIGHT, LIGHT_OFF);
           break;
-        case 6: // 熄灭所有灯
+        case 6: // 熄灭全部灯
           ctrl_light(RED_LIGHT, LIGHT_OFF);
           ctrl_light(GREEN_LIGHT, LIGHT_OFF);
           ctrl_light(BLUE_LIGHT, LIGHT_OFF);
           break;
-        case 7: // 点亮所有灯
+        case 7: // 点亮全部灯
           ctrl_light(RED_LIGHT, LIGHT_ON);
           ctrl_light(BLUE_LIGHT, LIGHT_ON);
           ctrl_light(GREEN_LIGHT, LIGHT_ON);
           break;
-        case 8: // 开启蜂鸣器
+        case 8: // 打开蜂鸣器
           Beep_Switch(1);
           break;
         case 9: // 关闭蜂鸣器
@@ -423,8 +436,10 @@ void SystemClock_Config(void)
   {
     Error_Handler();
   }
-  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1 | RCC_PERIPHCLK_ADC;
+  PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_USART1 | RCC_PERIPHCLK_USART3 | RCC_PERIPHCLK_I2C2 | RCC_PERIPHCLK_ADC;
   PeriphClkInit.Usart1ClockSelection = RCC_USART1CLKSOURCE_PCLK2;
+  PeriphClkInit.Usart3ClockSelection = RCC_USART3CLKSOURCE_PCLK1;
+  PeriphClkInit.I2c2ClockSelection = RCC_I2C2CLKSOURCE_PCLK1;
   PeriphClkInit.AdcClockSelection = RCC_ADCCLKSOURCE_PLLSAI1;
   PeriphClkInit.PLLSAI1.PLLSAI1Source = RCC_PLLSOURCE_HSE;
   PeriphClkInit.PLLSAI1.PLLSAI1M = 1;
