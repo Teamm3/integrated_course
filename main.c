@@ -330,42 +330,40 @@ int main(void)
         int cmd_num = hex2dec(acUserCmd[6], acUserCmd[7]);
         switch (cmd_num)
         {
-        case 0:
+        case 0: // 点亮红灯
           ctrl_light(RED_LIGHT, LIGHT_ON);
           break;
-        case 1:
+        case 1: // 熄灭红灯
           ctrl_light(RED_LIGHT, LIGHT_OFF);
           break;
-        case 2:
+        case 2: // 点亮绿灯
           ctrl_light(GREEN_LIGHT, LIGHT_ON);
           break;
-        case 3:
+        case 3: // 熄灭绿灯
           ctrl_light(GREEN_LIGHT, LIGHT_OFF);
           break;
-        case 4:
+        case 4: // 点亮蓝灯
           ctrl_light(BLUE_LIGHT, LIGHT_ON);
           break;
-        case 5:
+        case 5: // 熄灭蓝灯
           ctrl_light(BLUE_LIGHT, LIGHT_OFF);
           break;
-        case 6:
+        case 6: // 熄灭所有灯
           ctrl_light(RED_LIGHT, LIGHT_OFF);
           ctrl_light(GREEN_LIGHT, LIGHT_OFF);
           ctrl_light(BLUE_LIGHT, LIGHT_OFF);
           break;
-        case 7:
+        case 7: // 点亮所有灯
           ctrl_light(RED_LIGHT, LIGHT_ON);
           ctrl_light(BLUE_LIGHT, LIGHT_ON);
           ctrl_light(GREEN_LIGHT, LIGHT_ON);
           break;
-        case 8:
-          while (1)
-          {
-            Beep_Switch(1);
-            HAL_Delay(1000);
-            Beep_Switch(0);
-            HAL_Delay(1000);
-          }
+        case 8: // 开启蜂鸣器
+          Beep_Switch(1);
+          break;
+        case 9:
+          Beep_Switch(0);
+          break;
         }
 
         /* ?????????

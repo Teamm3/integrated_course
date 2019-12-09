@@ -1,8 +1,8 @@
 	export default {
 		data() {
 			return {
-				temperature: null,
-				humidity: null,
+				temperature: -45,
+				humidity: 0.00,
 				history: [],
 				scrollTop: 0,
 				old: {
