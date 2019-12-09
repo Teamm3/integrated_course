@@ -361,7 +361,7 @@ int main(void)
         case 8: // 开启蜂鸣器
           Beep_Switch(1);
           break;
-        case 9:
+        case 9: // 关闭蜂鸣器
           Beep_Switch(0);
           break;
         }

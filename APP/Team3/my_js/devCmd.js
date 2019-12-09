@@ -108,6 +108,24 @@ export default {
 					duration: 3000
 				})
 			}
+		},
+		beep_up(){
+			let cmd_code = 8;
+			let res = this.send_requests(cmd_code);
+			if(200 == res.code){
+				uni.showToast({
+					title:"蜂鸣器警报已经打开",
+					icon:"none",
+					duration:2000
+				})
+			}
+			else{
+				uni.showToast({
+					title:"蜂鸣器打开失败",
+					icon:"none",
+					duration:2000
+				})
+			}
 		}
 	}
 }
