@@ -1,0 +1,1 @@
+<view><block wx:for="{{history}}" wx:for-item="item" wx:for-index="index" wx:key="index"><view><text>{{item.T}}</text><text>{{item.H}}</text><text>{{item.L}}</text><text>{{item.S}}</text></view></block></view>

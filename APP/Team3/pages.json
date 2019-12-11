@@ -9,6 +9,14 @@
 			}
 		},
 		{
+			"path": "pages/index/devHistory",
+			"style": {
+				"navigationBarTitleText": "历史信息",
+				"enablePullDownRefresh": true,
+				"backgroundTextStyle": "dark"
+			}
+		},
+		{
 			"path": "pages/index/devCmd",
 			"style": {
 				"navigationBarTitleText": "设备命令"
@@ -21,8 +29,7 @@
 		"selectedColor": "#007AFF",
 		"borderStyle": "black",
 		"backgroundColor": "#F8F8F8",
-		"list": [
-			{
+		"list": [{
 				"pagePath": "pages/index/devInfo",
 				"iconPath": "static/images/bar1.png",
 				"selectedIconPath": "static/images/bar1_.png",

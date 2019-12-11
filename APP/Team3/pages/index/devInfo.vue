@@ -31,7 +31,7 @@
 				<image src="../../static/images/icon2.png" class="icon"></image>
 				<view class="title-text">历史信息</view>
 				<view class="history-buttom-item">
-					<text type="primary" plain="true" class="history-buttom">具体历史信息</text>
+					<text type="primary" plain="true" class="history-buttom" @tap="gotoHistory">具体历史信息</text>
 				</view>
 			</view>
 			<view class="line"></view>

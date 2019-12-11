@@ -8415,7 +8415,7 @@ module.exports = {"_from":"@dcloudio/uni-stat@next","_id":"@dcloudio/uni-stat@2.
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/devInfo": { "navigationBarTitleText": "设备信息", "enablePullDownRefresh": true, "backgroundTextStyle": "dark", "usingComponents": {} }, "pages/index/devCmd": { "navigationBarTitleText": "设备命令", "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/devInfo": { "navigationBarTitleText": "设备信息", "enablePullDownRefresh": true, "backgroundTextStyle": "dark" }, "pages/index/devHistory": { "navigationBarTitleText": "历史信息", "enablePullDownRefresh": true, "backgroundTextStyle": "dark" }, "pages/index/devCmd": { "navigationBarTitleText": "设备命令" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
 
 /***/ }),
 /* 8 */
@@ -8689,6 +8689,7 @@ var canvaLineA = null;var _default =
 
     },
     gotoHistory: function gotoHistory() {
+      console.log("jump to history");
       uni.navigateTo({
         url: 'devHistory',
         success: function success(res) {},
@@ -14615,6 +14616,114 @@ module.exports = {
     var reg = /^-?[1-9][0-9]?.?[0-9]*$/;
     return reg.test(checkVal);
   } };
+
+/***/ }),
+/* 24 */,
+/* 25 */,
+/* 26 */,
+/* 27 */,
+/* 28 */,
+/* 29 */,
+/* 30 */
+/*!**********************************************************************************************!*\
+  !*** E:/DZQ/项目/git/integrated_course/APP/Team3/my_js/devHistory.js?vue&type=script&lang=js& ***!
+  \**********************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_12_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_devHistory_js_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../../../课件/课程设计/开发工具/HBuilderX/plugins/uniapp-cli/node_modules/babel-loader/lib!../../../../../../课件/课程设计/开发工具/HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--12-1!../../../../../../课件/课程设计/开发工具/HBuilderX/plugins/uniapp-cli/node_modules/@dcloudio/webpack-uni-mp-loader/lib/script.js!./devHistory.js?vue&type=script&lang=js& */ 31);
+/* harmony import */ var _HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_12_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_devHistory_js_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_12_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_devHistory_js_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__);
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_12_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_devHistory_js_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__) if(__WEBPACK_IMPORT_KEY__ !== 'default') (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_12_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_devHistory_js_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+ /* harmony default export */ __webpack_exports__["default"] = (_HBuilderX_plugins_uniapp_cli_node_modules_babel_loader_lib_index_js_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_vue_cli_plugin_uni_packages_webpack_preprocess_loader_index_js_ref_12_1_HBuilderX_plugins_uniapp_cli_node_modules_dcloudio_webpack_uni_mp_loader_lib_script_js_devHistory_js_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0___default.a); 
+
+/***/ }),
+/* 31 */
+/*!*************************************************************************************************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib!./node_modules/@dcloudio/vue-cli-plugin-uni/packages/webpack-preprocess-loader??ref--12-1!./node_modules/@dcloudio/webpack-uni-mp-loader/lib/script.js!E:/DZQ/项目/git/integrated_course/APP/Team3/my_js/devHistory.js?vue&type=script&lang=js& ***!
+  \*************************************************************************************************************************************************************************************************************************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function(uni) {Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = {
+  data: function data() {
+    return {
+      history: [] };
+
+  },
+  onLoad: function onLoad() {
+    this.getHistory();
+  },
+  onPullDownRefresh: function onPullDownRefresh() {
+    this.getHistory();
+  },
+  methods: {
+    checkHistory: function checkHistory(history) {
+      // console.log(history);
+      var result = [];
+      for (var index in history) {
+        var item = history[index];
+        if (undefined == item.data) {
+          // console.log("踢掉了一个");
+          continue;
+        }
+        // console.log(Object.keys(item.data));
+        var info = item.data.infostring;
+        if (undefined == info)
+        continue;
+        if (null == info)
+        continue;
+        var tem = item.data.infostring.T;
+        var hum = item.data.infostring.H;
+        if (hum == 0.00)
+        continue;
+        var time_item = item.timestamp.toString();
+        console.log("this is a timestamp");
+        console.log(time_item);
+        var year = time_item.substr(0, 4);
+        var month = time_item.substr(4, 2);
+        var day = time_item.substr(6, 2);
+        var hour = (parseInt(time_item.substr(9, 2)) + 8).toString();
+        var minute = time_item.substr(11, 2);
+        var my_time = year + '年' + month + '月' + day + '日 ' + hour + ':' + minute;
+        // let my_time = year + month + day;
+        item.timestamp = my_time;
+        result.push(item);
+      }
+      return result;
+    },
+    getHistory: function getHistory() {var _this = this;
+      console.log("getHistory");
+      uni.request({
+        url: this.globalVal.default_url.devHistory,
+        method: "POST",
+        data: {
+          deviceId: this.globalVal.devId },
+
+        success: function success(res) {
+          if (200 == res.statusCode) {
+            if (undefined == res.data.error_code) {
+              console.log("成功获取历史信息");
+              var result = _this.checkHistory(res.data.deviceDataHistoryDTOs);
+              for (var each_item in result) {
+                var each = result[each_item];
+                var item = {
+                  T: each.data.infostring.T,
+                  H: each.data.infostring.H,
+                  L: each.data.infostring.L,
+                  S: each.data.infostring.S,
+                  timestamp: each.timestamp };
+
+                _this.history.push(item);
+              }
+            }
+          }
+        } });
+
+    } } };exports.default = _default;
+/* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(/*! ./node_modules/@dcloudio/uni-mp-weixin/dist/index.js */ 1)["default"]))
 
 /***/ })
 ]]);

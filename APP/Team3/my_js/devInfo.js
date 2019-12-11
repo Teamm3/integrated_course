@@ -97,6 +97,7 @@ export default {
 			}
 		},
 		gotoHistory() {
+			console.log("jump to history");
 			uni.navigateTo({
 				url: 'devHistory',
 				success: res => { },

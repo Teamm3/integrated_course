@@ -46,18 +46,20 @@ export default {
             return result;
         },
         getHistory() {
-            uni.requets({
+            console.log("getHistory");
+            uni.request({
                 url: this.globalVal.default_url.devHistory,
                 method: "POST",
                 data: {
-                    deviceId: this.globalVal.deviceId
+                    deviceId: this.globalVal.devId
                 },
                 success: res => {
-                    if (200 == res.stateCode) {
+                    if (200 == res.statusCode) {
                         if (undefined == res.data.error_code) {
-                            console.log("成功获取历史信息")
-                            let result = this.checkHistory((res.data.deviceDataHistoryDTOs);
-                            for (let each in result) {
+                            console.log("成功获取历史信息");
+                            let result = this.checkHistory(res.data.deviceDataHistoryDTOs);
+                            for (let each_item in result) {
+                                let each = result[each_item];
                                 let item = {
                                     T: each.data.infostring.T,
                                     H: each.data.infostring.H,
