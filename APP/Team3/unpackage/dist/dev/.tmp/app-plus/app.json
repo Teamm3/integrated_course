@@ -1,6 +1,7 @@
 {
   "pages": [
     "pages/index/devInfo",
+    "pages/index/devHistory",
     "pages/index/devCmd"
   ],
   "window": {

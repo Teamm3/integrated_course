@@ -8415,7 +8415,7 @@ module.exports = {"_from":"@dcloudio/uni-stat@next","_id":"@dcloudio/uni-stat@2.
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/devInfo": { "navigationBarTitleText": "设备信息", "enablePullDownRefresh": true, "backgroundTextStyle": "dark" }, "pages/index/devHistory": { "navigationBarTitleText": "历史信息", "enablePullDownRefresh": true, "backgroundTextStyle": "dark" }, "pages/index/devCmd": { "navigationBarTitleText": "设备命令" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/devInfo": { "navigationBarTitleText": "设备信息", "enablePullDownRefresh": true, "backgroundTextStyle": "dark", "usingComponents": {} }, "pages/index/devHistory": { "navigationBarTitleText": "历史信息", "enablePullDownRefresh": true, "backgroundTextStyle": "dark", "usingComponents": {} }, "pages/index/devCmd": { "navigationBarTitleText": "设备命令", "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
 
 /***/ }),
 /* 8 */
@@ -14714,7 +14714,8 @@ __webpack_require__.r(__webpack_exports__);
                   H: each.data.infostring.H,
                   L: each.data.infostring.L,
                   S: each.data.infostring.S,
-                  timestamp: each.timestamp };
+                  day: each.timestamp.split(' ')[0].substr(5),
+                  time: each.timestamp.split(' ')[1] };
 
                 _this.history.push(item);
               }
