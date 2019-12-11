@@ -185,8 +185,6 @@
 		width: 100%;
 		height: 500upx;
 		margin-top: 20upx;
-		/* margin-left: 5%; */
-		/* background: #3F536E; */
 	}
 	.qiun-charts {
 		width: 750upx;

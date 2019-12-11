@@ -96,6 +96,14 @@ export default {
 					break;
 			}
 		},
+		gotoHistory() {
+			uni.navigateTo({
+				url: 'devHistory',
+				success: res => { },
+				fail: () => { },
+				complete: () => { }
+			});
+		},
 		getInfo() {
 			uni.showToast({
 				title: "数据加载中......",
@@ -149,7 +157,9 @@ export default {
 				let year = time_item.substr(0, 4);
 				let month = time_item.substr(4, 2);
 				let day = time_item.substr(6, 2)
-				let my_time = year + '年' + month + '月' + day + '日';
+				let hour = (parseInt(time_item.substr(9, 2)) + 8).toString();
+				let minute = time_item.substr(11, 2);
+				let my_time = year + '年' + month + '月' + day + '日 ' + hour + ':' + minute;
 				// let my_time = year + month + day;
 				item.timestamp = my_time;
 				result.push(item);
@@ -173,6 +183,7 @@ export default {
 							console.log("初始历史");
 							console.log(res);
 							let result = this.checkHistory(res.data.deviceDataHistoryDTOs);
+							this.history = result;
 							this.temperatures[0].data = [];
 							this.humidities[0].data = [];
 							this.lights[0].data = [];
