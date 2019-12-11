@@ -18,11 +18,11 @@
 				</view>
 				<view class="content-item">
 					<text>光强：</text>
-					<text>{{light}}lux</text>
+					<text>{{light}}Lux</text>
 				</view>
 				<view class="content-item">
 					<text>噪音：</text>
-					<text>{{sound}}Db</text>
+					<text>{{sound}}dB</text>
 				</view>
 			</view>
 		</view>
@@ -50,7 +50,7 @@
 				</view>
 			</view>
 			<view class="graph">
-				<canvas canvas-id="canvasLineA" id="canvasLineA" class="charts" @touchstart="touchLineA"></canvas>
+				<canvas canvas-id="canvasLineA" id="canvasLineA" class="charts" disable-scroll=true @touchstart="touchLineA" @touchmove="moveLineA" @touchend="touchEndLineA"></canvas>
 			</view>
 		</view>
 	</view>
@@ -186,7 +186,18 @@
 		height: 500upx;
 		margin-top: 20upx;
 		/* margin-left: 5%; */
-		background: #3F536E;
+		/* background: #3F536E; */
+	}
+	.qiun-charts {
+		width: 750upx;
+		height: 500upx;
+		background-color: #FFFFFF;
+	}
+	
+	.charts {
+		width:  100%;
+		height: 500upx;
+		background-color: #FFFFFF;
 	}
 </style> 
 <script src="../../my_js/devInfo.js"></script>
