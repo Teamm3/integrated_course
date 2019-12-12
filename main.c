@@ -366,31 +366,31 @@ int main(void)
         case 1: // 熄灭红灯
           ctrl_light(RED_LIGHT, LIGHT_OFF);
           printf("*********************************\n");
-          printf("red light up!\n");
+          printf("red light off!\n");
           printf("*********************************\n");
           break;
         case 2: // 打开绿灯
           ctrl_light(GREEN_LIGHT, LIGHT_ON);
           printf("*********************************\n");
-          printf("red light up!\n");
+          printf("green light up!\n");
           printf("*********************************\n");
           break;
         case 3: // 熄灭绿灯
           ctrl_light(GREEN_LIGHT, LIGHT_OFF);
           printf("*********************************\n");
-          printf("red light up!\n");
+          printf("green light off!\n");
           printf("*********************************\n");
           break;
         case 4: // 打开蓝灯
           ctrl_light(BLUE_LIGHT, LIGHT_ON);
           printf("*********************************\n");
-          printf("red light up!\n");
+          printf("blue light up!\n");
           printf("*********************************\n");
           break;
         case 5: // 熄灭蓝灯
           ctrl_light(BLUE_LIGHT, LIGHT_OFF);
           printf("*********************************\n");
-          printf("red light up!\n");
+          printf("blue light off!\n");
           printf("*********************************\n");
           break;
         case 6: // 熄灭全部灯
@@ -406,25 +406,25 @@ int main(void)
         case 8: // 打开蜂鸣器
           Beep_Switch(0);
           printf("*********************************\n");
-          printf("red light up!\n");
+          printf("beep up!\n");
           printf("*********************************\n");
           break;
         case 9: // 关闭蜂鸣器
           Beep_Switch(1);
           printf("*********************************\n");
-          printf("red light up!\n");
+          printf("beep off!\n");
           printf("*********************************\n");
           break;
         case 10: // 打开自动报警
           autoBeep = 1;
           printf("*********************************\n");
-          printf("red light up!\n");
+          printf("auto up!\n");
           printf("*********************************\n");
           break;
         case 11: // 关闭自动报警
           autoBeep = 0;
           printf("*********************************\n");
-          printf("red light up!\n");
+          printf("auto off!\n");
           printf("*********************************\n");
           break;
         case 12: // 更新警报值
@@ -437,7 +437,7 @@ int main(void)
           hMax = max_hum;
           hMin = max_hum;
           printf("*********************************\n");
-          printf("red light up!\n");
+          printf("change limit!\n");
           printf("*********************************\n");
           break;
         }
