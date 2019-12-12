@@ -175,7 +175,8 @@ int main(void)
   uint8_t dataBuf[6] = {0};
 
   int autoBeep = 1;
-  float tMin = 20.0, tMax = 30.0, hMin = 0.0, hMax = 100.0;
+  float tMin = 0.0, tMax = 100.0, hMin = 0.0, hMax = 100.0;
+  int fflag = 0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -254,6 +255,11 @@ int main(void)
     case 7:
       if (0 == upFreq && 1 == netFlag)
       {
+        if (fflag == 0)
+        {
+          Beep_Switch(0);
+          fflag = 1;
+        }
         HAL_ADC_Start_DMA(&hadc1, (uint32_t *)ausAdcDataBuf, 2);
         printf("\n\n\n\n\n\n*************************************************************************************\n");
         printf("%d    %d\n", ausAdcDataBuf[0], ausAdcDataBuf[1]);
@@ -274,9 +280,14 @@ int main(void)
 
         KE1_I2C_SHT31(&fTemp, &fHumi);
         if (autoBeep == 1 && (fTemp < tMin || fTemp > tMax || fHumi < hMin || fHumi > hMax))
-          Beep_Switch(1);
+        {
+          printf("***************************************\nBeep!!!!\n");
+          printf("%.2f %.2f\n", fTemp, fHumi);
+          printf("***************************************\n");
+          // Beep_Switch(0);
+        }
         else
-          Beep_Switch(0);
+          Beep_Switch(1);
         memset(acDevInfo, 0, sizeof(acDevInfo));
         memset(acAtBuf, 0, sizeof(acAtBuf));
 
@@ -315,15 +326,15 @@ int main(void)
 
       HAL_Delay(1000);
     }
-    else if (2 == iRet)
-    { //AT?????ERROR??
-      printf("AT error !\r\n");
-      if (7 == iUserCase)
-      {
-        iUserCase = 0; // ???????
-      }
-      HAL_Delay(1000);
-    }
+    // else if (2 == iRet)
+    // { //AT?????ERROR??
+    //   printf("AT error !\r\n");
+    //   if (7 == iUserCase)
+    //   {
+    //     iUserCase = 0; // ???????
+    //   }
+    //   HAL_Delay(1000);
+    // }
     else if (3 == iRet)
     { //??????????
       printf("Net ready !\r\n");
@@ -347,25 +358,32 @@ int main(void)
         * TO-DO
         */
         int cmd_num = hex2dec(acUserCmd[6], acUserCmd[7]);
+        printf("````````````````````````````````````````\n%d\n", cmd_num);
         switch (cmd_num)
         {
         case 0: // 打开红灯
           ctrl_light(RED_LIGHT, LIGHT_ON);
+          printf("执行打开红灯命令\n");
           break;
         case 1: // 熄灭红灯
           ctrl_light(RED_LIGHT, LIGHT_OFF);
+          printf("执行打开熄灭命令\n");
           break;
         case 2: // 打开绿灯
           ctrl_light(GREEN_LIGHT, LIGHT_ON);
+          printf("执行打开绿灯命令\n");
           break;
         case 3: // 熄灭绿灯
           ctrl_light(GREEN_LIGHT, LIGHT_OFF);
+          printf("执行熄灭绿灯命令\n");
           break;
         case 4: // 打开蓝灯
           ctrl_light(BLUE_LIGHT, LIGHT_ON);
+          printf("执行打开蓝灯命令\n");
           break;
         case 5: // 熄灭蓝灯
           ctrl_light(BLUE_LIGHT, LIGHT_OFF);
+          printf("执行熄灭蓝灯命令\n");
           break;
         case 6: // 熄灭全部灯
           ctrl_light(RED_LIGHT, LIGHT_OFF);
@@ -378,16 +396,19 @@ int main(void)
           ctrl_light(GREEN_LIGHT, LIGHT_ON);
           break;
         case 8: // 打开蜂鸣器
-          Beep_Switch(1);
+          Beep_Switch(0);
+          // printf("执行打开红灯命令\n");
           break;
         case 9: // 关闭蜂鸣器
-          Beep_Switch(0);
+          Beep_Switch(1);
           break;
         case 10: // 打开自动报警
           autoBeep = 1;
+          printf("执行打开自动报警命令\n");
           break;
         case 11: // 关闭自动报警
           autoBeep = 0;
+          printf("执行关闭自动报警命令\n");
           break;
         case 12: // 更新警报值
           break;
