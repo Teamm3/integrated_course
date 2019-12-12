@@ -126,7 +126,7 @@ int hex2dec(char tens, char unit)
     result = tens - '0';
   result = result * 16;
   if (unit >= 'A' && unit <= 'Z')
-    result = result + unit - 'A';
+    result = result + unit - 'A' + 10;
   else
     result = result + unit - '0';
   return result;
@@ -255,26 +255,21 @@ int main(void)
     case 7:
       if (0 == upFreq && 1 == netFlag)
       {
-        if (fflag == 0)
-        {
-          Beep_Switch(0);
-          fflag = 1;
-        }
         HAL_ADC_Start_DMA(&hadc1, (uint32_t *)ausAdcDataBuf, 2);
-        printf("\n\n\n\n\n\n*************************************************************************************\n");
-        printf("%d    %d\n", ausAdcDataBuf[0], ausAdcDataBuf[1]);
-        printf("*************************************************************************************\n\n\n\n\n\n\n\n");
+        // printf("\n\n\n\n\n\n*************************************************************************************\n");
+        // printf("%d    %d\n", ausAdcDataBuf[0], ausAdcDataBuf[1]);
+        // printf("*************************************************************************************\n\n\n\n\n\n\n\n");
         //
         fVolts = ((3.3f * ausAdcDataBuf[0]) / 4096.0f);
         fAmps = fVolts / 10000.0f;
         fMicroamps = fAmps * 1000000;
         fLux = fMicroamps * 2.0f;
-        printf("Light:PA4_ADC:%d - %.2fLux\n", ausAdcDataBuf[0], fLux);
+        // printf("Light:PA4_ADC:%d - %.2fLux\n", ausAdcDataBuf[0], fLux);
 
         //
         val = ausAdcDataBuf[1];
         val = (((3.3f * val) / 4096.0f) * 2 * 1.5f) * 1000;
-        printf("Sound:PA6_ADC:%d - %d\n", ausAdcDataBuf[1], val);
+        // printf("Sound:PA6_ADC:%d - %d\n", ausAdcDataBuf[1], val);
 
         HAL_ADC_Stop(&hadc1);
 
@@ -282,20 +277,21 @@ int main(void)
         if (autoBeep == 1 && (fTemp < tMin || fTemp > tMax || fHumi < hMin || fHumi > hMax))
         {
           printf("***************************************\nBeep!!!!\n");
-          printf("%.2f %.2f\n", fTemp, fHumi);
+          // printf("%.2f %.2f\n", fTemp, fHumi);
           printf("***************************************\n");
           // Beep_Switch(0);
         }
         else
-          Beep_Switch(1);
+          // Beep_Switch(1);
+          printf("***************************************\nBeep Off!!!!\n***************************************\n");
         memset(acDevInfo, 0, sizeof(acDevInfo));
         memset(acAtBuf, 0, sizeof(acAtBuf));
 
         dLen = snprintf(acDevInfo, sizeof(acDevInfo), "{\"T\":\"%0.2f\",\"H\":\"%0.2f\",\"L\":\"%0.2f\",\"S\":\"%d\"}", fTemp, fHumi, fLux, val); // ??????
-        printf("%s\r\n", acDevInfo);
+        // printf("%s\r\n", acDevInfo);
         ascii2hex(acDevInfo, acHexBuf);
         snprintf(acAtBuf, sizeof(acAtBuf), "AT+NMGS=%d,00%04X%s\r\n", (dLen + 3), dLen, acHexBuf); // 打包COAP数据包AT命令
-        printf("%s\r\n", acAtBuf);
+        // printf("%s\r\n", acAtBuf);
         KE1_Send_AT(acAtBuf);
         upFreq = 6;
         OLED_Clear();
@@ -358,32 +354,44 @@ int main(void)
         * TO-DO
         */
         int cmd_num = hex2dec(acUserCmd[6], acUserCmd[7]);
-        printf("````````````````````````````````````````\n%d\n", cmd_num);
+        // printf("````````````````````````````````````````\n%d\n", cmd_num);
         switch (cmd_num)
         {
         case 0: // 打开红灯
           ctrl_light(RED_LIGHT, LIGHT_ON);
-          printf("执行打开红灯命令\n");
+          printf("*********************************\n");
+          printf("red light up!\n");
+          printf("*********************************\n");
           break;
         case 1: // 熄灭红灯
           ctrl_light(RED_LIGHT, LIGHT_OFF);
-          printf("执行打开熄灭命令\n");
+          printf("*********************************\n");
+          printf("red light up!\n");
+          printf("*********************************\n");
           break;
         case 2: // 打开绿灯
           ctrl_light(GREEN_LIGHT, LIGHT_ON);
-          printf("执行打开绿灯命令\n");
+          printf("*********************************\n");
+          printf("red light up!\n");
+          printf("*********************************\n");
           break;
         case 3: // 熄灭绿灯
           ctrl_light(GREEN_LIGHT, LIGHT_OFF);
-          printf("执行熄灭绿灯命令\n");
+          printf("*********************************\n");
+          printf("red light up!\n");
+          printf("*********************************\n");
           break;
         case 4: // 打开蓝灯
           ctrl_light(BLUE_LIGHT, LIGHT_ON);
-          printf("执行打开蓝灯命令\n");
+          printf("*********************************\n");
+          printf("red light up!\n");
+          printf("*********************************\n");
           break;
         case 5: // 熄灭蓝灯
           ctrl_light(BLUE_LIGHT, LIGHT_OFF);
-          printf("执行熄灭蓝灯命令\n");
+          printf("*********************************\n");
+          printf("red light up!\n");
+          printf("*********************************\n");
           break;
         case 6: // 熄灭全部灯
           ctrl_light(RED_LIGHT, LIGHT_OFF);
@@ -397,20 +405,40 @@ int main(void)
           break;
         case 8: // 打开蜂鸣器
           Beep_Switch(0);
-          // printf("执行打开红灯命令\n");
+          printf("*********************************\n");
+          printf("red light up!\n");
+          printf("*********************************\n");
           break;
         case 9: // 关闭蜂鸣器
           Beep_Switch(1);
+          printf("*********************************\n");
+          printf("red light up!\n");
+          printf("*********************************\n");
           break;
         case 10: // 打开自动报警
           autoBeep = 1;
-          printf("执行打开自动报警命令\n");
+          printf("*********************************\n");
+          printf("red light up!\n");
+          printf("*********************************\n");
           break;
         case 11: // 关闭自动报警
           autoBeep = 0;
-          printf("执行关闭自动报警命令\n");
+          printf("*********************************\n");
+          printf("red light up!\n");
+          printf("*********************************\n");
           break;
         case 12: // 更新警报值
+          float max_tem = (hex2dec(acUserCmd[12], acUserCmd[13]) - 48) * 10.0 + (hex2dec(acUserCmd[14], acUserCmd[15]) - 48) * 1.0 + (hex2dec(acUserCmd[16], acUserCmd[17]) - 48) * 0.1;
+          float min_tem = (hex2dec(acUserCmd[20], acUserCmd[21]) - 48) * 10.0 + (hex2dec(acUserCmd[22], acUserCmd[23]) - 48) * 1.0 + (hex2dec(acUserCmd[24], acUserCmd[25]) - 48) * 0.1;
+          float max_hum = (hex2dec(acUserCmd[28], acUserCmd[29]) - 48) * 10.0 + (hex2dec(acUserCmd[30], acUserCmd[31]) - 48) * 1.0 + (hex2dec(acUserCmd[32], acUserCmd[33]) - 48) * 0.1;
+          float min_hum = (hex2dec(acUserCmd[36], acUserCmd[37]) - 48) * 10.0 + (hex2dec(acUserCmd[38], acUserCmd[39]) - 48) * 1.0 + (hex2dec(acUserCmd[40], acUserCmd[41]) - 48) * 0.1;
+          tMax = max_tem;
+          tMin = min_tem;
+          hMax = max_hum;
+          hMin = max_hum;
+          printf("*********************************\n");
+          printf("red light up!\n");
+          printf("*********************************\n");
           break;
         }
         /**

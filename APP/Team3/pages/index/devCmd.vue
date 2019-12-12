@@ -188,7 +188,7 @@
 
 	.light-image {
 		width: 100%;
-		height: 90%;
+		height: 75%;
 		padding-bottom: 5%;
 	}
 

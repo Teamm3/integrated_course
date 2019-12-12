@@ -8415,7 +8415,7 @@ module.exports = {"_from":"@dcloudio/uni-stat@next","_id":"@dcloudio/uni-stat@2.
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/devInfo": { "navigationBarTitleText": "设备信息", "enablePullDownRefresh": true, "backgroundTextStyle": "dark" }, "pages/index/devHistory": { "navigationBarTitleText": "历史信息", "enablePullDownRefresh": true, "backgroundTextStyle": "dark" }, "pages/index/devCmd": { "navigationBarTitleText": "设备命令" } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
+Object.defineProperty(exports, "__esModule", { value: true });exports.default = void 0;var _default = { "pages": { "pages/index/devInfo": { "navigationBarTitleText": "设备信息", "enablePullDownRefresh": true, "backgroundTextStyle": "dark", "usingComponents": {} }, "pages/index/devHistory": { "navigationBarTitleText": "历史信息", "enablePullDownRefresh": true, "backgroundTextStyle": "dark", "usingComponents": {} }, "pages/index/devCmd": { "navigationBarTitleText": "设备命令", "usingComponents": {} } }, "globalStyle": { "navigationBarTextStyle": "black", "navigationBarTitleText": "uni-app", "navigationBarBackgroundColor": "#F8F8F8", "backgroundColor": "#F8F8F8" } };exports.default = _default;
 
 /***/ }),
 /* 8 */
@@ -14909,8 +14909,8 @@ __webpack_require__.r(__webpack_exports__);
             duration: 1000,
             icon: "none" });
 
-          _this2.red_light = !_this2.red_light;
-          _this2.refresh();
+          _this2.autoWarn = !_this2.autoWarn;
+          // this.refresh();
         },
         fail: function fail() {
           // target = this.red_light ? "点亮蓝灯" : "熄灭蓝灯";
@@ -14924,7 +14924,8 @@ __webpack_require__.r(__webpack_exports__);
     },
     submitWarn: function submitWarn() {
       var cmd_code = 12;
-      this.cmd_str = this.minT.toString() + ' ' + this.maxT.toString() + ' ' + this.minH.toString() + ' ' + this.maxH.toString();
+      this.cmd_str = this.minT.toString().replace('.', '') + ' ' + this.maxT.toString().replace('.', '') + ' ' + this.minH.toString().replace('.', '') + ' ' + this.maxH.toString().replace('.', '');
+      console.log(this.cmd_str);
       var cmd_para = {
         cmdstring: this.cmd_str,
         cmdlen: this.cmd_str.length,
