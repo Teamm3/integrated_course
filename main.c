@@ -173,6 +173,9 @@ int main(void)
 
   uint16_t usVal = 0;
   uint8_t dataBuf[6] = {0};
+
+  int autoBeep = 1;
+  float tMin = 20.0, tMax = 30.0, hMin = 0.0, hMax = 100.0;
   /* USER CODE END 1 */
 
   /* MCU Configuration--------------------------------------------------------*/
@@ -270,7 +273,10 @@ int main(void)
         HAL_ADC_Stop(&hadc1);
 
         KE1_I2C_SHT31(&fTemp, &fHumi);
-
+        if (autoBeep == 1 && (fTemp < tMin || fTemp > tMax || fHumi < hMin || fHumi > hMax))
+          Beep_Switch(1);
+        else
+          Beep_Switch(0);
         memset(acDevInfo, 0, sizeof(acDevInfo));
         memset(acAtBuf, 0, sizeof(acAtBuf));
 
@@ -377,7 +383,18 @@ int main(void)
         case 9: // 关闭蜂鸣器
           Beep_Switch(0);
           break;
+        case 10: // 打开自动报警
+          autoBeep = 1;
+          break;
+        case 11: // 关闭自动报警
+          autoBeep = 0;
+          break;
+        case 12: // 更新警报值
+          break;
         }
+        /**
+         *TODO 
+         */
 
         /* ?????????
         * AT+NMGS=5,02000A000A

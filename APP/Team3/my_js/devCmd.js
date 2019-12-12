@@ -1,15 +1,21 @@
 export default {
 	data() {
 		return {
-			red_src: 'off',
-			green_src: 'off',
-			blue_src: 'off',
-			cmd_str: '123321',
-			cmd_code_input: 0
+			minT: 20.1,
+			maxT: 30.1,
+			minH: 10.1,
+			maxH: 40.1,
+			red_light: false,
+			blue_light: false,
+			green_light: false,
+			autoWarn: true,
+			img_path: '0',
+			cmd_str: '123321'
+			// cmd_code_input: 0
 		}
 	},
 	methods: {
-		send_requests(cmd_code) {
+		send_code(cmd_code) {
 			let result = {};
 			let cmd_para = {
 				cmdstring: this.cmd_str,
@@ -39,92 +45,130 @@ export default {
 			});
 			return result;
 		},
-		send_code() {
-			let res = this.send_requests(this.cmd_code_input);
+		refresh() {
+			let red = this.red_light ? 100 : 0;
+			let green = this.green_light ? 10 : 0;
+			let blue = this.blue_light ? 1 : 0;
+			this.img_path = (red + green + blue).toString();
+		},
+		change(num) {
+			console.log("this is in change");
+			console.log(this.red_light);
+			console.log(this.green_light);
+			console.log(this.blue_light);
+			let cmd_code = 0;
+			let res;
+			let target;
+			switch (num) {
+				case 1:
+					if (true == this.red_light)
+						cmd_code = 0;
+					else cmd_code = 1;
+					res = this.send_code(cmd_code);
+					target = this.red_light ? "点亮红灯" : "熄灭红灯";
+					if (200 == res.code) {
+						uni.showToast({
+							title: target + "成功!",
+							duration: 1000,
+							icon: "none"
+						});
+						this.red_light = !this.red_light;
+						this.refresh();
+					} else {
+						uni.showToast({
+							title: target + "失败!",
+							duration: 1000,
+							icon: "none"
+						});
+					}
+					break;
+				case 2:
+					// let cmd_code;
+					if (true == this.green_light)
+						cmd_code = 2;
+					else cmd_code = 3;
+					res = this.send_code(cmd_code);
+					target = this.green_light ? "点亮绿灯" : "熄灭绿灯";
+					if (200 == res.code) {
+						uni.showToast({
+							title: target + "成功!",
+							duration: 1000,
+							icon: "none"
+						});
+						this.green_light = !this.green_light;
+						this.refresh();
+					} else {
+						uni.showToast({
+							title: target + "失败!",
+							duration: 1000,
+							icon: "none"
+						});
+					}
+					break;
+				case 3:
+					// let cmd_code;
+					if (true == this.blue_light)
+						cmd_code = 4;
+					else cmd_code = 5;
+					res = this.send_code(cmd_code);
+					target = this.blue_light ? "点亮蓝灯" : "熄灭蓝灯";
+					if (200 == res.code) {
+						uni.showToast({
+							title: target + "成功!",
+							duration: 1000,
+							icon: "none"
+						});
+						this.blue_light = !this.blue_light;
+						this.refresh();
+					} else {
+						uni.showToast({
+							title: target + "失败!",
+							duration: 1000,
+							icon: "none"
+						});
+					}
+					break;
+			}
+			console.log("change is over");
+			console.log(this.red_light);
+			console.log(this.green_light);
+			console.log(this.blue_light);
+		},
+		changeAuto() {
+			let cmd_code = this.autoWarn ? 11 : 10;
+			let res = this.send_code(cmd_code);
+			let target = this.autoWarn ? "关闭自动报警" : "打开自动报警";
 			if (200 == res.code) {
 				uni.showToast({
-					title: "命令发送成功！",
+					title: target + "成功!",
 					icon: "none",
-					duration: 2000
+					duration: 1000
 				});
+				this.autoWarn = !this.autoWarn;
 			} else {
 				uni.showToast({
-					title: "命令发送失败！",
+					title: target + "失败!",
 					icon: "none",
-					duration: 2000
+					duration: 1000
 				});
 			}
 		},
-		change_red() {
-			let cmd_code = "off" == this.red_src ? 0 : 1;
-			let res = this.send_requests(cmd_code);
+		submitWarn() {
+			let cmd_code = 12;
+			this.cmd_str = this.minT.toString() + ' ' + this.maxT.toString() + ' ' + this.minH.toString() + ' ' + this.maxH.toString();
+			let res = this.send_code(cmd_code);
 			if (200 == res.code) {
 				uni.showToast({
-					title: "点亮红灯成功！",
+					title: "上传警戒值成功!",
 					icon: "none",
-					duration: 3000
+					duration: 1000
 				});
-				this.red_src = "red";
 			} else {
 				uni.showToast({
-					title: "点亮红灯失败！",
+					title: "上传警戒值失败!",
 					icon: "none",
-					duration: 3000
+					duration: 1000
 				});
-			}
-		},
-		change_green() {
-			let cmd_code = "off" == this.green_src ? 2 : 3;
-			let res = this.send_requests(cmd_code);
-			if (200 == res.code) {
-				uni.showToast({
-					title: "绿灯点亮成功！",
-					icon: "none",
-					duration: 3000
-				});
-				this.green_src = "green";
-			} else {
-				uni.showToast({
-					title: "绿灯点亮失败！",
-					icon: "none",
-					duration: 3000
-				});
-			}
-		},
-		change_blue() {
-			let cmd_code = "off" == this.blue_src ? 4 : 5;
-			let res = this.send_requests(cmd_code);
-			if (200 == res.code) {
-				uni.showToast({
-					title: "蓝灯点亮成功！",
-					icon: "none",
-					duration: 3000
-				});
-				this.blue_src = "blue";
-			} else {
-				uni.showToast({
-					title: "蓝灯点亮失败！",
-					icon: "none",
-					duration: 3000
-				})
-			}
-		},
-		beep_up(){
-			let cmd_code = 8;
-			let res = this.send_requests(cmd_code);
-			if(200 == res.code){
-				uni.showToast({
-					title:"蜂鸣器警报已经打开",
-					icon:"none",
-					duration:2000
-				})
-			}
-			else{
-				uni.showToast({
-					title:"蜂鸣器打开失败",
-					icon:"none",
-					duration:2000
-				})
 			}
 		}
 	}

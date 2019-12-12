@@ -7,20 +7,20 @@
 			<view class="line"></view>
 			<view class="light-content">
 				<view class="picture">
-					<image :src="'../../static/images/light/'+img_path+'.jpg'" class="light-image"></image>
+					<image :src="'../../static/images/light/'+img_path+'.png'" class="light-image"></image>
 				</view>
 				<view class="switchs">
 					<view class="switch-item">
 						<text class="switch-text">红灯</text>
-						<switch checked="red_light" @change="change(1)" class="switch" />
+						<switch color="#123456" :checked="red_light" @change="change(1)" class="switch" />
 					</view>
 					<view class="switch-item">
 						<text class="switch-text">绿灯</text>
-						<switch checked="green_light" @change="change(2)" class="switch" />
+						<switch color="#123456" :checked="green_light" @change="change(2)" class="switch" />
 					</view>
 					<view class="switch-item">
 						<text class="switch-text">蓝灯</text>
-						<switch checked="blue_light" @change="change(3)" class="switch" />
+						<switch color="#123456" :checked="blue_light" @change="change(3)" class="switch" />
 					</view>
 				</view>
 			</view>
@@ -33,7 +33,7 @@
 			<view class="beep-content">
 				<view class="auto-beep">
 					<text class="switch-text">自动报警</text>
-					<switch checked="true" @change="changeAuto" class="switch"/>
+					<switch color="#123456" :checked="autoWarn" @change="changeAuto" class="switch"/>
 				</view>
 				<view class="beep-range">
 					<view class="beep-range-item">
@@ -41,13 +41,13 @@
 							<text class="switch-text">温度范围</text>
 						</view>
 						<view class="range-item-input">
-							<input type="text" v-model="minT" class="input"/>
+							<input v-model="minT" class="input" type="number"/>
 						</view>
 						<view class="line-view">
 							<view class="short-line"></view>
 						</view>
 						<view class="range-item-input">
-							<input type="text" v-model="maxT" class="input"/>
+							<input v-model="maxT" class="input" type="number"/>
 						</view>
 					</view>
 					<view class="beep-range-item">
@@ -55,13 +55,13 @@
 							<text class="switch-text">湿度范围</text>
 						</view>
 						<view class="range-item-input">
-							<input type="text" v-model="minH" class="input"/>
+							<input v-model="minH" class="input" type="number"/>
 						</view>
 						<view class="line-view">
 							<view class="short-line"></view>
 						</view>
 						<view class="range-item-input">
-							<input type="text" v-model="maxH" class="input"/>
+							<input v-model="maxH" class="input" type="number"/>
 						</view>
 					</view>
 				</view>
@@ -175,6 +175,7 @@
 	.switch {
 		transform: scale(0.8);
 		margin-left: 10upx;
+		color: #123456;
 	}
 
 	.picture {
