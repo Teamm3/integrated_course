@@ -1,0 +1,43 @@
+{
+  "pages": [
+    "pages/index/devInfo",
+    "pages/index/devHistory",
+    "pages/index/devCmd"
+  ],
+  "window": {
+    "navigationBarTextStyle": "black",
+    "navigationBarTitleText": "uni-app",
+    "navigationBarBackgroundColor": "#F8F8F8",
+    "backgroundColor": "#F8F8F8"
+  },
+  "tabBar": {
+    "position": "bottom",
+    "color": "#7A7E83",
+    "selectedColor": "#007AFF",
+    "borderStyle": "black",
+    "backgroundColor": "#F8F8F8",
+    "list": [
+      {
+        "pagePath": "pages/index/devInfo",
+        "iconPath": "static/images/bar1.png",
+        "selectedIconPath": "static/images/bar1_.png",
+        "text": "设备信息"
+      },
+      {
+        "pagePath": "pages/index/devCmd",
+        "iconPath": "static/images/bar2.png",
+        "selectedIconPath": "static/images/bar2_.png",
+        "text": "设备命令"
+      }
+    ]
+  },
+  "nvueCompiler": "uni-app",
+  "renderer": "auto",
+  "splashscreen": {
+    "alwaysShowBeforeRender": true,
+    "autoclose": false
+  },
+  "appname": "Team3",
+  "compilerVersion": "2.4.2",
+  "usingComponents": {}
+}

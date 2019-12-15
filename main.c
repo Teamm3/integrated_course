@@ -279,11 +279,13 @@ int main(void)
           printf("***************************************\nBeep!!!!\n");
           // printf("%.2f %.2f\n", fTemp, fHumi);
           printf("***************************************\n");
-          // Beep_Switch(0);
+          Beep_Switch(0);
         }
         else
-          // Beep_Switch(1);
+        {
+          Beep_Switch(1);
           printf("***************************************\nBeep Off!!!!\n***************************************\n");
+        }
         memset(acDevInfo, 0, sizeof(acDevInfo));
         memset(acAtBuf, 0, sizeof(acAtBuf));
 
@@ -428,16 +430,17 @@ int main(void)
           printf("*********************************\n");
           break;
         case 12: // 更新警报值
-          float max_tem = (hex2dec(acUserCmd[12], acUserCmd[13]) - 48) * 10.0 + (hex2dec(acUserCmd[14], acUserCmd[15]) - 48) * 1.0 + (hex2dec(acUserCmd[16], acUserCmd[17]) - 48) * 0.1;
-          float min_tem = (hex2dec(acUserCmd[20], acUserCmd[21]) - 48) * 10.0 + (hex2dec(acUserCmd[22], acUserCmd[23]) - 48) * 1.0 + (hex2dec(acUserCmd[24], acUserCmd[25]) - 48) * 0.1;
-          float max_hum = (hex2dec(acUserCmd[28], acUserCmd[29]) - 48) * 10.0 + (hex2dec(acUserCmd[30], acUserCmd[31]) - 48) * 1.0 + (hex2dec(acUserCmd[32], acUserCmd[33]) - 48) * 0.1;
-          float min_hum = (hex2dec(acUserCmd[36], acUserCmd[37]) - 48) * 10.0 + (hex2dec(acUserCmd[38], acUserCmd[39]) - 48) * 1.0 + (hex2dec(acUserCmd[40], acUserCmd[41]) - 48) * 0.1;
+          float min_tem = (hex2dec(acUserCmd[12], acUserCmd[13]) - 48) * 10.0 + (hex2dec(acUserCmd[14], acUserCmd[15]) - 48) * 1.0 + (hex2dec(acUserCmd[16], acUserCmd[17]) - 48) * 0.1;
+          float max_tem = (hex2dec(acUserCmd[20], acUserCmd[21]) - 48) * 10.0 + (hex2dec(acUserCmd[22], acUserCmd[23]) - 48) * 1.0 + (hex2dec(acUserCmd[24], acUserCmd[25]) - 48) * 0.1;
+          float min_hum = (hex2dec(acUserCmd[28], acUserCmd[29]) - 48) * 10.0 + (hex2dec(acUserCmd[30], acUserCmd[31]) - 48) * 1.0 + (hex2dec(acUserCmd[32], acUserCmd[33]) - 48) * 0.1;
+          float max_hum = (hex2dec(acUserCmd[36], acUserCmd[37]) - 48) * 10.0 + (hex2dec(acUserCmd[38], acUserCmd[39]) - 48) * 1.0 + (hex2dec(acUserCmd[40], acUserCmd[41]) - 48) * 0.1;
           tMax = max_tem;
           tMin = min_tem;
           hMax = max_hum;
-          hMin = max_hum;
+          hMin = min_hum;
           printf("*********************************\n");
           printf("change limit!\n");
+          printf("tMin:%.2f   tMax:%.2f\nhMin:%.2f    hMax:%.2f", tMin, tMax, hMin, hMax);
           printf("*********************************\n");
           break;
         }
